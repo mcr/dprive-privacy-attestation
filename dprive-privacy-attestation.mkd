@@ -1,0 +1,142 @@
+---
+title: A privacy policy attestation for DoT and DoH servers
+abbrev: DNS-privacy
+docname: draft-richardson-dprive-privacy-attestation-00
+
+# stand_alone: true
+
+ipr: trust200902
+area: Internet
+wg: anima Working Group
+kw: Internet-Draft
+cat: std
+stand_alone: true
+
+coding: us-ascii
+pi:    # can use array (if all yes) or hash here
+  toc: yes
+  sortrefs:   # defaults to yes
+  symrefs: yes
+
+author:
+
+
+- ins: M. Richardson
+  name: Michael Richardson
+  org: Sandelman Software Works
+  email: mcr+ietf@sandelman.ca
+
+- ins: T. Reddy
+  name: Tirumaleswar Reddy
+  org: McAfee, Inc
+  email: kondtir@gmail.com
+
+- ins: D. Wing
+  name: Dan Wing
+  org: Citrix Systems, Inc.
+  email: dwing-ietf@fuggles.com
+  
+normative:
+  BCP14: RFC8174
+
+informative:
+  CDN:
+    target: "https://conferences.sigcomm.org/sigcomm/2015/pdf/papers/p167.pdf"
+    title: "End-User Mapping: Next Generation Request Routing for Content Delivery"
+    year: 2015
+
+--- abstract
+
+This document describes a process by which a DNS over TLS
+or DNS over HTTPS may provide an attestation as to their privacy
+policy to a client machine.  As the use of mechanisms other than
+DNS on port-53 (Do53), many different suppliers of these alternate
+mechanism will increase: client systems will need to be able to
+make informed choices, and this mechanism provides for one
+source of information.
+
+--- middle
+
+# Introduction
+
+Traditionally a caching DNS server has been provided by local
+networks.  This provides benefits such as low latency to reach that
+DNS server (owing to its network proximity to the endpoint).
+However, if an endpoint is configured to use Internet-hosted or
+public DNS-over-(D)TLS {{!RFC7858}} {{!RFC8094}} or DNS-over-HTTPS
+{{!RFC8484}} servers, any available local DNS server cannot serve DNS
+requests from local endpoints.  If public DNS servers are used
+instead of using local DNS servers, some operational problems can
+occur such as those listed below:
+
+*  "Split DNS" {{!RFC2775}} to use the special internal-only domain
+    names (e.g., "internal.example.com") in enterprise networks will
+    not work, and ".local" and "home.arpa" names cannot be locally
+    resolved in home networks.
+
+*  Content Delivery Networks (CDNs) that map traffic based on DNS may
+   lose the ability to direct end-user traffic to a nearby service-
+   specific cluster in cases where a DNS service is being used that
+   is not affiliated with the local network and which does not send
+   "EDNS Client Subnet" (ECS) information {{!RFC7871}} to the CDN's DNS
+   authorities {{CDN}}.
+
+If public DNS servers are used instead of using local DNS servers,
+the following discusses the impact on network-based security:
+
+*  Various network security services are provided by Enterprise
+      networks to protect endpoints (e.g,. Hosts, IoT devices).
+      {{!I-D.camwinget-tls-use-cases}} discusses some of the network-based
+      security service use cases.  These network security services act
+      on DNS requests originating from endpoints.
+
+*  However, if an endpoint is configured to use public DNS-
+      over-(D)TLS or DNS-over-HTTPS servers, network security services
+      cannot act efficiently on DNS requests from these endpoints.
+
+*  In order to act on DNS requests from endpoints, network security
+      services can block DNS-over-(D)TLS traffic by dropping outgoing
+      packets to destination port 853.  Identifying DNS-over-HTTPS
+      traffic is far more challenging than DNS-over-(D)TLS traffic.
+      Network security services may try to identify the domains offering
+      DNS-over-HTTPS servers, and DNS-over-HTTPS traffic can be blocked
+      by dropping outgoing packets to these domains.  If an endpoint has
+      enabled strict privacy profile (Section 5 of [RFC8310]), and the
+      network security service blocks the traffic to the public DNS
+      server, the DNS service won't be available to the endpoint and
+      ultimately the endpoint cannot access Internet-reachable services.
+
+*  If an endpoint has enabled opportunistic privacy profile
+   (Section 5 of {{!RFC8310}}), and the network security service blocks
+   traffic to the public DNS server, the endpoint will either
+   fallback to an encrypted connection without authenticating the DNS
+   server provided by the local network or fallback to clear text
+   DNS, and cannot exchange encrypted DNS messages.
+
+# Terminology
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+"OPTIONAL" in this document are to be interpreted as described in
+{{BCP14}} when, and
+only when, they appear in all capitals, as shown here.
+
+# Privacy Considerations
+
+YYY
+
+# Security Considerations
+
+ZZZ
+
+# IANA Considerations
+
+# Acknowledgements
+
+Hello.
+
+# Changelog
+
+
+--- back
+
